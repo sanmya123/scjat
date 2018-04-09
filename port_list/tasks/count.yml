@@ -1,0 +1,23 @@
+---
+- ec2_group_facts:
+    filters:
+      group-id: "{{ sg_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ access }}"
+    aws_secret_key: "{{ secret }}"
+  register: test
+
+- set_fact:
+    sg2: []
+
+- set_fact:
+    sg2: "{{ (test | json_query('security_groups[*].ip_permissions[*].from_port') | replace('[[', '[') | replace(']]', ']') )}}"
+
+- debug:
+    msg: "{{sg2}}"
+
+
+- set_fact:
+     final: "{{final + [{'port': (test | json_query('security_groups[*].group_id')) }]}}"
+  when: "item in accetaptable_port"
+  with_items: "{{ sg2 }}"

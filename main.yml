@@ -1,0 +1,9 @@
+---
+# Create the resources
+- hosts: localhost
+  connection: local
+
+  roles:
+    - role: port_list
+
+

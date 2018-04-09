@@ -1,0 +1,15 @@
+---
+- name: listing of vpc before 30 days.
+  ec2_vpc_subnet_facts:
+    region: "{{ region }}"
+    aws_access_key: "{{ access }}"
+    aws_secret_key: "{{ secret }}"
+  register: vpc
+- set_fact:
+     data: []
+- set_fact:
+     data: "{{ (vpc | json_query('subnets[*].vpc_id')| replace('[[', '[') | replace(']]', ']') )}}"
+- debug:
+     msg: "{{ data }}"
+
+

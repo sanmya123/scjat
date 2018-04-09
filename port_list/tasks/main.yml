@@ -1,0 +1,26 @@
+---
+ - file: "path=/home/ubuntu/kuch.txt state=absent"
+ - name: Listing up sg
+   ec2_group_facts:
+     aws_access_key: "{{ access }}"
+     aws_secret_key: "{{ secret }}"
+     region: "{{ region }}"
+   register: sg
+ - debug:
+     msg: "{{ sg }}"
+ - set_fact:
+     data: []
+ - set_fact:
+     data: "{{  (sg | json_query('security_groups[*].group_id')) |replace('[[', '[') | replace(']]', ']') }}"
+ - debug:
+     msg: "{{ data }}"
+
+ - include: count.yml sg_id={{ item }}
+   with_items:
+    - "{{ data }}"
+
+ - debug:
+     msg: "{{ final }}"
+
+ - shell: echo -e "{{ item.port }}" >> /home/ubuntu/kuch.txt
+   with_items: "{{ final }}"

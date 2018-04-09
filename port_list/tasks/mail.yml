@@ -1,0 +1,38 @@
+---
+- ec2_group_facts:
+    filters:
+      group-id: "{{ sg_mail }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ access }}"
+    aws_secret_key: "{{ secret }}"
+  register: mailres
+
+
+- debug:
+    msg: "{{ mailres }}"
+
+- set_fact:
+   owner_tag: {}
+
+- name: Get Owner Tags off the instances
+  set_fact:
+    owner_tag: "{{ tag_loop_var.value }}"
+  when: tag_loop_var.key == "owner"
+  with_dict: "{{mailres.security_groups[0].tags }}"
+  loop_control:
+    loop_var: tag_loop_var
+  register: owner_tag
+- debug:
+    msg: "{{ owner_tag }}"
+
+- name: Send Email to Individual Owners of noncompliant AMIs
+  mail:
+    attach: /home/ubuntu/kuch.txt
+    body: "A security scan has discovered the attached EC2 Instances are running with unauthorized tags . Reach out to cloud-admin@officedepot.com
+# if you need assistance."
+    host: smtp.gmail.com
+    password: sandhya@1995
+    username: somyatiwari105@gmail.com
+    port: 465
+    subject: "AWS - EC2 NonCompliant AMI List"
+    to: " {{ owner_tag }}"
