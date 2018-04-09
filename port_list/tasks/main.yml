@@ -1,5 +1,7 @@
 ---
  - file: "path=/home/ubuntu/kuch.txt state=absent"
+   become: yes
+
  - name: Listing up sg
    ec2_group_facts:
      aws_access_key: "{{ access }}"
