@@ -1,5 +1,5 @@
 ---
 # vars file for ansible-role-sqlserver
-access: AKIAI5CYZTZLLZMTUPYQ
-secret: 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
+access: 
+secret: 
 region: us-west-2
