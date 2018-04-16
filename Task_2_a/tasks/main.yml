@@ -1,32 +1,26 @@
-- name: Chmod -R 777
-  shell: >
-    chdir=/home/ubuntu
-    chmod -R 0777 DevEnv
-  become_user: root
-
 - name:  download composer
   get_url:
     url: https://s3.us-east-2.amazonaws.com/sujith-cloud-operstions/wic_{{ tag }}.tar
-    dest: /home/ubuntu/DevEnv
+    dest: /home/ubuntu/
 #  become: true
   become_user: ubuntu
 
 - name: Extract wic.tar into /home/ubuntu
   unarchive:
-    src: /home/ubuntu/DevEnv/wic_{{ tag }}.tar
-    dest: /home/ubuntu/DevEnv
+    src: /home/ubuntu/wic_{{ tag }}.tar
+    dest: /home/ubuntu/
 
 
 - name:  copy one folder to the another folder
   copy:
     src: "{{ item }}"
-    dest: /home/ubuntu/DevEnv/wic/sys/directv/accountsuspend
+    dest: /home/ubuntu/wic/sys/directv/accountsuspend
     owner: ubuntu
     mode: 0777
   with_fileglob:
-     - /home/ubuntu/DevEnv/wic/sys/directv/accountsuspend/DTVAccountSuspendApp/*.sh
+     - /home/ubuntu/wic/sys/directv/accountsuspend/DTVAccountSuspendApp/*.sh
 
 - name: Run installation and verification script
   command: sh {{item}}
   with_fileglob:
-     - /home/ubuntu/DevEnv/wic/sys/directv/accountsuspend/*.sh
+     - /home/ubuntu/wic/sys/directv/accountsuspend/*.sh
