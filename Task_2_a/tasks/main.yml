@@ -1,0 +1,26 @@
+- name:  download composer
+  get_url:
+    url: https://s3.us-east-2.amazonaws.com/sujith-cloud-operstions/wic_1.0.tar
+    dest: /home/ubuntu
+  become: true
+  become_user: root
+
+- name: Extract wic.tar into /home/ubuntu
+  unarchive:
+    src: /home/ubuntu/wic_1.0.tar
+    dest: /home/ubuntu/
+
+
+- name:  copy one folder to the another folder
+  copy:
+    src: "{{ item }}"
+    dest: /home/ubuntu/wic/sys/directv/accountsuspend
+    owner: ubuntu
+    mode: 0777
+  with_fileglob:
+     - /home/ubuntu/wic/sys/directv/accountsuspend/DTVAccountSuspendApp/*.sh
+
+- name: Run installation and verification script
+  command: sh {{item}}
+  with_fileglob:
+     - /home/ubuntu/wic/sys/directv/accountsuspend/*.sh
