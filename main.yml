@@ -1,6 +1,6 @@
 ---
 # Create the resources
-- hosts: localhost
+- hosts: dev
   connection: local
 
   roles:
