@@ -2,7 +2,6 @@
   shell: >
     chdir=/home/ubuntu
     chmod -R 0777 DevEnv
-  become: true
   become_user: root
 
 - name:  download composer
