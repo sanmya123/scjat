@@ -1,6 +1,6 @@
 - name:  download composer
   get_url:
     url: https://s3.us-east-2.amazonaws.com/sujith-cloud-operstions/wic_{{ tag }}.tar
-    dest: / 
+    dest: /home
   become_user: ubuntu
   sudo: yes
