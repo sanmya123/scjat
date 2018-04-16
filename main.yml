@@ -2,7 +2,7 @@
 # Create the resources
 - hosts: dev
   connection: local
-
+  remote_user: ubuntu
   roles:
     - role: Task_2_a
 
