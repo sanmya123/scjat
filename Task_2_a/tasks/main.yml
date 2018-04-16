@@ -1,5 +1,25 @@
-- name:  download composer
+---
+- name: 1. ansible-tower-setup-latest.tar.gz
   get_url:
-    url: https://s3.us-east-2.amazonaws.com/sujith-cloud-operstions/wic_{{ tag }}.tar
-    dest: /home
+    url: https://s3-us-west-2.amazonaws.com/sujith918/{{tag}}
+    dest: /home/ubuntu
+  become: true
   become_user: root
+
+- name: 2. unarchive ansible-tower-setup-latest.tar.gz
+  unarchive:
+    src: /home/ubuntu/{{tag}}
+    dest: /home/ubuntu
+
+- name:  copy one folder to the another folder
+  copy:
+    src: "{{ item }}"
+    dest: /home/ubuntu/wic/sys/directv/accountsuspend
+  with_fileglob:
+    - /home/ubuntu/wic/sys/directv/accountsuspend/DTVAccountSuspendApp/*sh
+
+- name: Run installation and verification script
+  command: sh {{item}}
+  with_fileglob:
+    - /home/ubuntu/wic/sys/directv/accountsuspend/*.sh
+

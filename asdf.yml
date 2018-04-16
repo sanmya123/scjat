@@ -1,0 +1,33 @@
+---
+-
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name:  download file from s3
+      get_url:
+         url: https://s3.us-east-2.amazonaws.com/sujith-cloud-operstions/wic_1_0.tar
+         dest: /home/ubuntu
+      become: true
+      become_user: root
+
+    - name: Extract tar file
+      unarchive:
+        src: /home/ubuntu/wic_1_0.tar
+        dest: /home/ubuntu
+
+    - copy:
+       src: "{{ item }}"
+       dest: /home/ubuntu/wic/sys/directv/accountsuspend
+       owner: ubuntu
+       mode: 0777
+      with_fileglob:
+          - /home/ubuntu/wic/sys/directv/accountsuspend/DTVAccountSuspendApp/*.sh
+
+    - name: Run installation and verification script
+      command: sh "{{item}}"
+      with_fileglob:
+       - /home/ubuntu/wic/sys/directv/accountsuspend/*.sh
+      register: result
+   - name: Show result
+     debug:
+         msg: "{{ result.stdout }}"
